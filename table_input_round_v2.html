@@ -170,33 +170,38 @@
 
         <!-- Page E: Card Drawing -->
         <div id="E_Page" class="page" :class="{ 'visible': currentPage === 'E_Page' }">
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex flex-wrap items-center mb-6 gap-4">
                 <button @click="navigateToPage('C_Page')" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300">
                     <i class="fas fa-arrow-left mr-2"></i> 返回問題頁
                 </button>
-                
                 <!-- 隨機選取按鈕 - 正常狀態 -->
                 <button v-if="showRandomButton && isSubmitted && !allRoundsCompleted && !isRandomSelecting && !randomSelectCompleted && !hasManualSelection" @click="randomSelect" 
                     class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105">
                     <i class="fas fa-magic mr-2"></i> 隨機選取
                 </button>
-                
                 <!-- 隨機選取按鈕 - 進行中狀態 -->
                 <button v-if="showRandomButton && isRandomSelecting" disabled
                     class="bg-purple-400 text-white font-bold py-2 px-6 rounded-full opacity-50 cursor-not-allowed">
                     <i class="fas fa-spinner fa-spin mr-2"></i> 選取中...
                 </button>
-                
                 <!-- 隨機選取按鈕 - 完成狀態 -->
                 <button v-if="showRandomButton && randomSelectCompleted" disabled
                     class="bg-green-500 text-white font-bold py-2 px-6 rounded-full opacity-70 cursor-not-allowed">
                     <i class="fas fa-check mr-2"></i> 隨機抽取完成
                 </button>
-                
                 <!-- 手動選取後的提示 -->
                 <div v-if="showRandomButton && hasManualSelection && !allRoundsCompleted" 
                     class="bg-orange-500 text-white font-bold py-2 px-6 rounded-full opacity-70">
                     <i class="fas fa-hand-paper mr-2"></i> 已開始手動選取
+                </div>
+                <!-- 操作說明區塊 -->
+                <div class="bg-slate-900/80 text-sm text-cyan-200 px-4 py-2 rounded-lg border border-slate-700 w-full md:max-w-[500px] md:self-stretch md:ml-auto">
+                    <span class="font-bold text-sky-400">操作說明：</span>
+                    <ul class="list-disc list-inside mt-1 space-y-1">
+                        <li>請依序選擇每一回合的數字與區域。</li>
+                        <li>每次只能編輯目前回合，上一回合需填完才能進行下一步。</li>
+                        <li>完成所有回合後，系統會產生專屬序號，可複製保存。</li>
+                    </ul>
                 </div>
             </div>
             
@@ -760,16 +765,9 @@
                 const canEditNumber = (index) => {
                     if (allRoundsCompleted.value) return false;
                     if (!canEdit(index)) return false;
-                    
                     const currentRow = rows.value[index];
-                    
-                    // 如果當前輪次的區域還沒選擇，數字就可以更動
-                    if (!currentRow.box) {
-                        return true;
-                    }
-                    
-                    // 如果區域已經選擇了，數字就不能再編輯
-                    return false;
+                    // 只要該行尚未填數字，都能選擇數字，不管區域是否已選
+                    return !currentRow.card;
                 };
 
                 // 檢查區域是否可以編輯

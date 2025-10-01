@@ -42,6 +42,14 @@
         [v-cloak] {
             display: none;
         }
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
     </style>
 </head>
 <body class="text-gray-200">
@@ -50,7 +58,17 @@
 
         <!-- Header -->
         <div class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">歡迎</h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">歡迎來到抽牌系統</h1>
+            <div class="bg-slate-900/80 text-sm text-cyan-300 font-mono py-2 px-4 rounded-full border border-slate-700 inline-block mb-3 cursor-pointer select-none"
+                @mousedown="startLongPress"
+                @mouseup="endLongPress"
+                @mouseleave="endLongPress"
+                @touchstart="startLongPress"
+                @touchend="endLongPress"
+                @touchcancel="endLongPress"
+                :class="{ 'bg-cyan-600/80 scale-95 ring-2 ring-cyan-400': isLongPressing }">
+                {{ currentTime }}
+            </div>
             <p class="text-sky-300">一個引導您探索內心的工具</p>
         </div>
 
@@ -68,10 +86,11 @@
                 
                 <div class="space-y-6 mb-8">
                     <p class="text-lg text-gray-300 leading-relaxed">
-                        體驗占卜之旅
+                        體驗到神秘的占卜
                     </p>
                     <p class="text-base text-gray-400">
-                        請用心準備您的問題<br />讓牌卡為您指引方向
+                        請用心準備您的問題<br />
+						讓牌卡為您指引方向
                     </p>
                 </div>
 
@@ -143,7 +162,7 @@
         </div>
 
         <!-- Page 2: Placeholder -->
-        <div id="Page_2" class="page" data-visible="false" :class="{ 'visible': currentPage === 'Page_2' }">
+        <div id="Page_2" class="page" data-visible="true" :class="{ 'visible': currentPage === 'Page_2' }">
             <div class="bg-slate-800/70 backdrop-blur-sm border border-slate-700 rounded-xl p-6 shadow-lg text-center">
                 <h2 class="text-2xl font-bold text-teal-400 mb-4">A2 Page</h2>
                 <p class="text-gray-300">這裡是 A2 頁面內容。</p>
@@ -179,23 +198,11 @@
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
                 <div class="flex gap-2 flex-wrap">
                     <button @click="goToPrevPage()" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-full text-sm transition">
-                        <i class="fas fa-arrow-left mr-1"></i> 上一頁
+                        <i class="fas fa-arrow-left mr-1"></i>
                     </button>
                     <button @click="showDirectionsModal = true" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-full text-sm transition">規則說明</button>
                     <button @click="showCardsModal = true" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-full text-sm transition">抽牌說明</button>
                     <button @click="showLinksModal = true" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-full text-sm transition">連結資訊</button>
-                </div>
-                <!--title="按壓兩秒後啟動隨機功能"-->
-                <div class="bg-slate-900/80 text-sm text-cyan-300 font-mono py-2 px-4 rounded-full border border-slate-700 cursor-pointer select-none"
-                    @mousedown="startLongPress"
-                    @mouseup="endLongPress"
-                    @mouseleave="endLongPress"
-                    @touchstart="startLongPress"
-                    @touchend="endLongPress"
-                    @touchcancel="endLongPress"
-                    :class="{ 'bg-cyan-600/80 scale-95 ring-2 ring-cyan-400': isLongPressing }"
-                    >
-                    {{ currentTime }}
                 </div>
             </div>
 
@@ -304,21 +311,9 @@
                                     </div>
                                 </div>
                                 
-                                <!-- 右側區域包含時間和隨機選取按鈕 -->
+                                <!-- 右側區域包含隨機選取按鈕 -->
                                 <div class="flex flex-col items-end gap-2 text-xs text-gray-400 z-30">
-                                    <!-- 時間位置在右上角 -->
-                                    <div class="font-mono text-amber-300 text-[11px] bg-slate-900/80 py-1 px-3 rounded-full border border-slate-700 cursor-pointer select-none shadow-lg"
-                                        @mousedown="startLongPress"
-                                        @mouseup="endLongPress"
-                                        @mouseleave="endLongPress"
-                                        @touchstart="startLongPress"
-                                        @touchend="endLongPress"
-                                        @touchcancel="endLongPress"
-                                        :class="{ 'bg-cyan-600/80 scale-95 ring-2 ring-cyan-400': isLongPressing }">
-                                        {{ currentTime }}
-                                    </div>
-                                    
-                                    <!-- 隨機選取按鈕移至時間下方、主題右側 -->
+                                    <!-- 隨機選取按鈕 -->
                                     <div class="text-xs">
                                         <!-- 隨機選取按鈕 - 正常狀態 -->
                                         <button v-if="showRandomButton && isSubmitted && !allRoundsCompleted && !isRandomSelecting && !randomSelectCompleted && !hasManualSelection" @click="randomSelect" 
@@ -391,7 +386,7 @@
             <div v-if="allRoundsCompleted" class="mt-6 bg-emerald-800/70 backdrop-blur-sm border border-emerald-700 rounded-xl p-6 shadow-lg">
                 <h5 class="text-xl font-bold text-emerald-300 mb-3">抽牌完成！</h5>
                 <p class="text-gray-300 mb-2">本次操作序號為：</p>
-                <div class="bg-slate-900 p-3 rounded-lg text-amber-300 break-words font-mono text-sm">
+                <div class="bg-slate-900 p-3 rounded-lg text-amber-300 break-words font-mono text-sm no-select">
                     {{ base64Output }}
                 </div>
                 <button @click="copyToClipboard(base64Output)" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-full transition text-sm">
@@ -548,7 +543,7 @@
                 </div>
                 <div class="p-6">
                     <p class="text-gray-300 mb-2">本次操作序號為：</p>
-                    <div class="bg-slate-900 p-3 rounded-lg text-amber-300 font-mono text-sm min-h-[4rem] max-h-32 overflow-y-auto" style="word-break: break-all; white-space: pre-wrap; line-height: 1.4;">
+                    <div class="bg-slate-900 p-3 rounded-lg text-amber-300 font-mono text-sm min-h-[4rem] max-h-32 overflow-y-auto no-select" style="word-break: break-all; white-space: pre-wrap; line-height: 1.4;">
                         {{ base64Output }}
                     </div>
                 </div>

@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>抽牌系統 v2</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.4.27/dist/vue.global.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -48,12 +48,49 @@
 
     <div id="app" v-cloak class="container mx-auto p-4 max-w-4xl">
 
-        <!-- Page A: Welcome/Rules -->
-        <div id="A_Page" class="page" :class="{ 'visible': currentPage === 'A_Page' }">
-            <div class="text-center mb-8">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">歡迎來到抽牌系統</h1>
-                <p class="text-sky-300">一個引導您探索內心的工具</p>
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">歡迎</h1>
+            <p class="text-sky-300">一個引導您探索內心的工具</p>
+        </div>
+
+        <!-- Welcome Page -->
+        <div id="Index_Page" class="page" data-visible="true" :class="{ 'visible': currentPage === 'Index_Page' }">
+            <div class="bg-slate-800/70 backdrop-blur-sm border border-slate-700 rounded-xl p-8 shadow-lg text-center">
+                <div class="mb-8">
+                    <h1 class="text-4xl md:text-5xl font-bold text-sky-400 mb-4">
+                        <i class="fas fa-star text-yellow-400 mr-3"></i>
+                        歡迎占卜體驗
+                        <i class="fas fa-star text-yellow-400 ml-3"></i>
+                    </h1>
+                    <div class="w-24 h-1 bg-gradient-to-r from-sky-400 to-purple-500 mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="space-y-6 mb-8">
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        體驗占卜之旅
+                    </p>
+                    <p class="text-base text-gray-400">
+                        請用心準備您的問題，讓牌卡為您指引方向
+                    </p>
+                </div>
+
+                <div class="flex justify-center items-center space-x-4 mb-8">
+                    <i class="fas fa-moon text-purple-400 text-2xl"></i>
+                    <i class="fas fa-crystal-ball text-sky-400 text-3xl"></i>
+                    <i class="fas fa-sun text-yellow-400 text-2xl"></i>
+                </div>
             </div>
+            
+            <div class="text-center mt-8">
+                <button @click="goToNextPage()" class="bg-gradient-to-r from-sky-600 to-purple-600 hover:from-sky-700 hover:to-purple-700 text-white font-bold py-4 px-12 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105">
+                    開始占卜之旅 <i class="fas fa-magic ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 0: Welcome/Rules -->
+        <div id="Page_0" class="page" data-visible="true" :class="{ 'visible': currentPage === 'Page_0' }">
             <div class="bg-slate-800/70 backdrop-blur-sm border border-slate-700 rounded-xl p-6 shadow-lg">
                 <h2 class="text-2xl font-bold text-sky-400 border-b-2 border-sky-700 pb-2 mb-4">規則說明</h2>
                 <ol class="list-decimal list-inside space-y-3 text-gray-300">
@@ -72,20 +109,18 @@
                     <li>我在七月有某個考試，想知道考運如何？</li>
                 </ul>
             </div>
-            <div class="text-center mt-8">
-                <button @click="navigateToPage('B_Page')" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105">
+            <div class="flex justify-center gap-8 mt-8">
+                <button @click="goToPrevPage()" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-full">
+                    <i class="fas fa-arrow-left mr-2"></i> 上一頁
+                </button>
+                <button @click="goToNextPage()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-full">
                     下一頁 <i class="fas fa-arrow-right ml-2"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Page B: Drawing Instructions -->
-        <div id="B_Page" class="page" :class="{ 'visible': currentPage === 'B_Page' }">
-            <div class="flex justify-start mb-6">
-                <button @click="navigateToPage('A_Page')" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300">
-                    <i class="fas fa-arrow-left mr-2"></i> 上一頁
-                </button>
-            </div>
+        <!-- Page 1: Drawing Instructions -->
+        <div id="Page_1" class="page" data-visible="true" :class="{ 'visible': currentPage === 'Page_1' }">
             <div class="bg-slate-800/70 backdrop-blur-sm border border-slate-700 rounded-xl p-6 shadow-lg">
                 <h2 class="text-2xl font-bold text-amber-400 border-b-2 border-amber-700 pb-2 mb-4">抽牌說明</h2>
                 <ol class="list-decimal list-inside space-y-3 text-gray-300">
@@ -97,27 +132,68 @@
                     <li>最後1輪，數字1-12擇1即可。</li>
                 </ol>
             </div>
-            <div class="text-center mt-8">
-                <button @click="navigateToPage('C_Page')" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105">
+            <div class="flex justify-center gap-8 mt-8">
+                <button @click="goToPrevPage()" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-full">
+                    <i class="fas fa-arrow-left mr-2"></i> 上一頁
+                </button>
+                <button @click="goToNextPage()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-full">
+                    下一頁 <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 2: Placeholder -->
+        <div id="Page_2" class="page" data-visible="false" :class="{ 'visible': currentPage === 'Page_2' }">
+            <div class="bg-slate-800/70 backdrop-blur-sm border border-slate-700 rounded-xl p-6 shadow-lg text-center">
+                <h2 class="text-2xl font-bold text-teal-400 mb-4">A2 Page</h2>
+                <p class="text-gray-300">這裡是 A2 頁面內容。</p>
+            </div>
+            <div class="flex justify-center gap-8 mt-8">
+                <button @click="goToPrevPage()" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-full">
+                    <i class="fas fa-arrow-left mr-2"></i> 上一頁
+                </button>
+                <button @click="goToNextPage()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-full">
+                    下一頁 <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 3: Placeholder -->
+        <div id="Page_3" class="page" data-visible="false" :class="{ 'visible': currentPage === 'Page_3' }">
+            <div class="bg-slate-800/70 backdrop-blur-sm border border-slate-700 rounded-xl p-6 shadow-lg text-center">
+                <h2 class="text-2xl font-bold text-teal-400 mb-4">A3 Page</h2>
+                <p class="text-gray-300">這裡是 A3 頁面內容。</p>
+            </div>
+            <div class="flex justify-center gap-8 mt-8">
+                <button @click="goToPrevPage()" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-full">
+                    <i class="fas fa-arrow-left mr-2"></i> 上一頁
+                </button>
+                <button @click="goToNextPage()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full">
                     我明白了，開始提問 <i class="fas fa-arrow-right ml-2"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Page C: User Input -->
-        <div id="C_Page" class="page" :class="{ 'visible': currentPage === 'C_Page' }">
+        <!-- Page 4: User Input -->
+        <div id="Page_4" class="page" data-visible="true" :class="{ 'visible': currentPage === 'Page_4' }">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
                 <div class="flex gap-2 flex-wrap">
-                    <button @click="navigateToPage('B_Page')" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-full text-sm transition">
+                    <button @click="goToPrevPage()" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-full text-sm transition">
                         <i class="fas fa-arrow-left mr-1"></i> 上一頁
                     </button>
                     <button @click="showDirectionsModal = true" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-full text-sm transition">規則說明</button>
                     <button @click="showCardsModal = true" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-full text-sm transition">抽牌說明</button>
                     <button @click="showLinksModal = true" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-full text-sm transition">連結資訊</button>
                 </div>
-                <!--title="快速點擊三下切換隨機功能"-->
+                <!--title="按壓兩秒後啟動隨機功能"-->
                 <div class="bg-slate-900/80 text-sm text-cyan-300 font-mono py-2 px-4 rounded-full border border-slate-700 cursor-pointer select-none"
-                    @click="handleTripleClick"
+                    @mousedown="startLongPress"
+                    @mouseup="endLongPress"
+                    @mouseleave="endLongPress"
+                    @touchstart="startLongPress"
+                    @touchend="endLongPress"
+                    @touchcancel="endLongPress"
+                    :class="{ 'bg-cyan-600/80 scale-95 ring-2 ring-cyan-400': isLongPressing }"
                     >
                     {{ currentTime }}
                 </div>
@@ -140,60 +216,66 @@
                     </select>
                 </div>
                 <textarea v-model="questionContent" :readonly="isSubmitted" placeholder="請在此詳述您的問題，包含人、事、時等細節..." class="w-full bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-sky-500 focus:border-sky-500 p-2.5 transition h-32 resize-none disabled:opacity-50"></textarea>
-                <div class="flex gap-4 mt-4">
-                    <button v-if="!isSubmitted" @click="submitQuestion" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full transition">確認問題</button>
-                    <button v-if="isSubmitted && !hasStartedDrawing" @click="editQuestion" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-full transition">編輯問題</button>
-                    <button v-if="hasSelectedBox || allRoundsCompleted" @click="navigateToPage('E_Page')" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-6 rounded-full transition">返回抽牌頁</button>
+                <div class="flex items-center justify-between mt-4">
+                    <!-- 左側：編輯按鈕（固定靠左） -->
+                    <div class="flex">
+                        <button v-if="isSubmitted && !hasStartedDrawing" @click="editQuestion" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-full transition">編輯問題</button>
+                    </div>
+
+                    <!-- 右側：返回 / 確認 按鈕（固定靠右） -->
+                    <div class="flex items-center gap-4">
+                        <button v-if="hasSelectedBox || allRoundsCompleted" @click="navigateToPage('End_Page')" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-6 rounded-full transition">返回抽牌頁</button>
+                        <button @click="submitQuestion" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full transition">確認問題</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Page D: Meditation -->
-        <div id="D_Page" class="page" :class="{ 'visible': currentPage === 'D_Page' }">
-             <div class="flex justify-start mb-6">
-                <button @click="navigateToPage('C_Page')" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300">
-                    <i class="fas fa-arrow-left mr-2"></i> 返回問題頁
-                </button>
-            </div>
-            <div class="text-center">
-                <div class="h-[60vh] bg-cover bg-center rounded-xl shadow-2xl flex flex-col justify-center items-center p-6" style="background-image: url('images/img_meditation.jpg');">
-                    <div class="bg-black/60 p-8 rounded-xl">
-                        <h3 class="text-3xl font-bold text-white mb-4">請專心冥想您的問題</h3>
-                        <p class="text-gray-300">深呼吸，放鬆心情，專注於您想要詢問的事物。</p>
+        <!-- Page 5: Meditation -->
+        <div id="Page_5" class="page" data-visible="true" :class="{ 'visible': currentPage === 'Page_5' }">
+            <div class="bg-cover bg-center rounded-xl shadow-2xl flex flex-col justify-center items-center p-4 h-[60vh] sm:h-[55vh] md:h-[50vh]" style="background-image: url('images/img_meditation.jpg');">
+                <div class="bg-black/50 backdrop-blur-sm p-6 sm:p-8 rounded-xl w-full max-w-3xl text-center">
+                    <p class="text-2xl md:text-3xl font-extrabold text-yellow-300 mb-6 tracking-wider drop-shadow-lg">請專心冥想您的問題</p>
+                    <p class="text-lg text-gray-300">深呼吸，放鬆心情，專注於您想要詢問的事物。</p>
+                    <div class="bg-slate-900/70 border border-slate-700 rounded-xl shadow-inner text-left p-6">
+                        <!-- Subject -->
+                        <div class="flex items-center gap-3">
+                            <div class="flex-shrink-0 w-12 h-12 bg-sky-800/50 rounded-full flex items-center justify-center border-2 border-sky-600">
+                                <i :class="subjectIcon" class="text-2xl text-sky-300"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-sky-400">提問主題</p>
+                                <p class="text-xl font-semibold text-gray-100">{{ subject || '未設定主題' }}</p>
+                            </div>
+                        </div>
+                        
+                        <hr class="border-slate-600/80 my-4">
+                        
+                        <!-- Question -->
+                        <div>
+                            <p class="text-sm font-bold text-amber-400 mb-2">您的問題</p>
+                            <div class="max-h-[25vh] overflow-auto pr-2">
+                                <p class="text-gray-200 font-light leading-relaxed whitespace-pre-line break-words text-base md:text-lg">
+                                    {{ questionContent || '（尚未輸入問題）' }}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <button @click="navigateToPage('E_Page')" class="mt-8 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105">
+            </div>
+            <div class="flex justify-center gap-8 mt-8">
+                <button @click="goToPrevPage()" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-full">
+                    <i class="fas fa-arrow-left mr-2"></i> 上一頁
+                </button>
+                <button @click="goToNextPage()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105">
                     <i class="fas fa-magic mr-2"></i> 開始抽牌
                 </button>
             </div>
         </div>
 
-        <!-- Page E: Card Drawing -->
-        <div id="E_Page" class="page" :class="{ 'visible': currentPage === 'E_Page' }">
+        <!-- Page A6: Card Drawing -->
+        <div id="End_Page" class="page" data-visible="true" :class="{ 'visible': currentPage === 'End_Page' }">
             <div class="flex flex-wrap items-center mb-6 gap-4">
-                <button @click="navigateToPage('C_Page')" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300">
-                    <i class="fas fa-arrow-left mr-2"></i> 返回問題頁
-                </button>
-                <!-- 隨機選取按鈕 - 正常狀態 -->
-                <button v-if="showRandomButton && isSubmitted && !allRoundsCompleted && !isRandomSelecting && !randomSelectCompleted && !hasManualSelection" @click="randomSelect" 
-                    class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105">
-                    <i class="fas fa-magic mr-2"></i> 隨機選取
-                </button>
-                <!-- 隨機選取按鈕 - 進行中狀態 -->
-                <button v-if="showRandomButton && isRandomSelecting" disabled
-                    class="bg-purple-400 text-white font-bold py-2 px-6 rounded-full opacity-50 cursor-not-allowed">
-                    <i class="fas fa-spinner fa-spin mr-2"></i> 選取中...
-                </button>
-                <!-- 隨機選取按鈕 - 完成狀態 -->
-                <button v-if="showRandomButton && randomSelectCompleted" disabled
-                    class="bg-green-500 text-white font-bold py-2 px-6 rounded-full opacity-70 cursor-not-allowed">
-                    <i class="fas fa-check mr-2"></i> 隨機抽取完成
-                </button>
-                <!-- 手動選取後的提示 -->
-                <div v-if="showRandomButton && hasManualSelection && !allRoundsCompleted" 
-                    class="bg-orange-500 text-white font-bold py-2 px-6 rounded-full opacity-70">
-                    <i class="fas fa-hand-paper mr-2"></i> 已開始手動選取
-                </div>
                 <!-- 操作說明區塊 -->
                 <div class="bg-slate-900/80 text-sm text-cyan-200 px-4 py-2 rounded-lg border border-slate-700 w-full md:max-w-[500px] md:self-stretch md:ml-auto">
                     <span class="font-bold text-sky-400">操作說明：</span>
@@ -202,6 +284,73 @@
                         <li>每次只能編輯目前回合，上一回合需填完才能進行下一步。</li>
                         <li>完成所有回合後，系統會產生專屬序號，可複製保存。</li>
                     </ul>
+                </div>
+                <!-- 提問顯示區塊-->
+                <div v-if="questionContent" class="w-full flex-1 min-w-0">
+                    <div class="relative bg-slate-800/70 backdrop-blur-sm border border-slate-700 rounded-xl shadow-lg w-full overflow-visible">
+                        <div class="p-4 relative">
+                            <div class="flex items-start justify-between">
+                                <div class="relative flex-1">
+                                    <div class="font-bold text-sky-300 text-lg mb-2">本次提問</div>
+                                    <div class="text-xs text-gray-400 flex items-center gap-x-4 flex-wrap">
+                                        <span class="inline-flex items-center">
+                                            <i class="fas fa-user fa-fw mr-1.5 text-cyan-400"></i>
+                                            稱呼: <span class="font-medium text-gray-200 ml-1">{{ cus_name || '訪客' }}</span>
+                                        </span>
+                                        <span class="inline-flex items-center">
+                                            <i :class="subjectIcon" class="fa-fw mr-1.5 text-cyan-400"></i>
+                                            主題: <span class="font-medium text-gray-200 ml-1">{{ subject || '未設定' }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 右側區域包含時間和隨機選取按鈕 -->
+                                <div class="flex flex-col items-end gap-2 text-xs text-gray-400 z-30">
+                                    <!-- 時間位置在右上角 -->
+                                    <div class="font-mono text-amber-300 text-[11px] bg-slate-900/80 py-1 px-3 rounded-full border border-slate-700 cursor-pointer select-none shadow-lg"
+                                        @mousedown="startLongPress"
+                                        @mouseup="endLongPress"
+                                        @mouseleave="endLongPress"
+                                        @touchstart="startLongPress"
+                                        @touchend="endLongPress"
+                                        @touchcancel="endLongPress"
+                                        :class="{ 'bg-cyan-600/80 scale-95 ring-2 ring-cyan-400': isLongPressing }">
+                                        {{ currentTime }}
+                                    </div>
+                                    
+                                    <!-- 隨機選取按鈕移至時間下方、主題右側 -->
+                                    <div class="text-xs">
+                                        <!-- 隨機選取按鈕 - 正常狀態 -->
+                                        <button v-if="showRandomButton && isSubmitted && !allRoundsCompleted && !isRandomSelecting && !randomSelectCompleted && !hasManualSelection" @click="randomSelect" 
+                                            class="bg-purple-600/90 hover:bg-purple-700 text-white font-bold py-1 px-4 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105 text-xs backdrop-blur-sm border border-purple-500/50 whitespace-nowrap">
+                                            隨機選取
+                                        </button>
+                                        <!-- 隨機選取按鈕 - 進行中狀態 -->
+                                        <button v-if="showRandomButton && isRandomSelecting" disabled
+                                            class="bg-purple-400/90 text-white font-bold py-1 px-4 rounded-full opacity-50 cursor-not-allowed text-xs backdrop-blur-sm border border-purple-400/50 whitespace-nowrap">
+                                            選取中...
+                                        </button>
+                                        <!-- 隨機選取按鈕 - 完成狀態 -->
+                                        <button v-if="showRandomButton && randomSelectCompleted" disabled
+                                            class="bg-green-500/90 text-white font-bold py-1 px-4 rounded-full opacity-70 cursor-not-allowed text-xs backdrop-blur-sm border border-green-500/50 whitespace-nowrap">
+                                            隨機抽取完成
+                                        </button>
+                                        <!-- 手動選取後的提示 -->
+                                        <div v-if="showRandomButton && hasManualSelection && !allRoundsCompleted" 
+                                            class="bg-orange-500/90 text-white font-bold py-1 px-4 rounded-full opacity-70 text-xs backdrop-blur-sm border border-orange-500/50 whitespace-nowrap">
+                                            已開始手動選取
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900/50 px-4 py-3 border-t border-slate-700/50">
+                            <!-- 時間已移至標題區域 -->
+                             <p class="overflow-visible text-amber-100 font-light leading-relaxed whitespace-pre-line break-words text-base md:text-lg pr-2">
+                                {{ questionContent }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -290,7 +439,7 @@
                     <!-- List View -->
                     <div v-if="areaSelectorView === 'list'" class="grid grid-cols-3 sm:grid-cols-4 gap-3">
                         <button v-for="area in selectorAreas" :key="area.value" @click="selectArea(area)"
-                            class="p-3 rounded-lg font-bold text-white bg-amber-600 hover:bg-amber-700 transition-all duration-200 transform hover:scale-110">
+                            class="p-3 rounded-lg font-bold text-white bg-amber-600 hover:bg-amber-700 transition-all duration-200 transform hover:scale-110'">
                             {{ area.text }}
                         </button>
                     </div>
@@ -399,7 +548,7 @@
                 </div>
                 <div class="p-6">
                     <p class="text-gray-300 mb-2">本次操作序號為：</p>
-                    <div class="bg-slate-900 p-3 rounded-lg text-amber-300 break-words font-mono text-sm">
+                    <div class="bg-slate-900 p-3 rounded-lg text-amber-300 font-mono text-sm min-h-[4rem] max-h-32 overflow-y-auto" style="word-break: break-all; white-space: pre-wrap; line-height: 1.4;">
                         {{ base64Output }}
                     </div>
                 </div>
@@ -418,10 +567,41 @@
         createApp({
             setup() {
                 // Page management
-                const currentPage = ref('A_Page');
+                const currentPage = ref('Index_Page');
                 const navigateToPage = (pageId) => {
                     window.scrollTo(0, 0);
                     currentPage.value = pageId;
+                };
+
+                const allPages = ref([]); // 用於存放動態掃描到的頁面ID
+
+                // 重新掃描頁面的函數
+                const rescanPages = () => {
+                    const pageElements = document.querySelectorAll('.page[data-visible="true"]');
+                    allPages.value = Array.from(pageElements).map(el => el.id);
+                };
+
+                // 設定頁面可見性的函數
+                const setPageVisible = (pageId, visible) => {
+                    const pageElement = document.getElementById(pageId);
+                    if (pageElement) {
+                        pageElement.setAttribute('data-visible', visible.toString());
+                        rescanPages(); // 重新掃描頁面清單
+                    }
+                };
+
+                const goToNextPage = () => {
+                    const currentIndex = allPages.value.indexOf(currentPage.value);
+                    if (currentIndex !== -1 && currentIndex < allPages.value.length - 1) {
+                        navigateToPage(allPages.value[currentIndex + 1]);
+                    }
+                };
+
+                const goToPrevPage = () => {
+                    const currentIndex = allPages.value.indexOf(currentPage.value);
+                    if (currentIndex > 0) {
+                        navigateToPage(allPages.value[currentIndex - 1]);
+                    }
                 };
 
                 // User input
@@ -434,7 +614,7 @@
                 const submitQuestion = () => {
                     if (gender.value && cus_name.value && subject.value && questionContent.value) {
                         isSubmitted.value = true;
-                        navigateToPage('D_Page');
+                        navigateToPage('Page_5');
                     } else {
                         alert('請填寫所有問題相關資訊！');
                     }
@@ -651,36 +831,45 @@
                 const showRandomButton = ref(false); // 控制隨機按鈕顯示
                 const hasManualSelection = ref(false); // 追蹤是否有手動選擇
                 
-                // 快速點擊功能 (三下點擊)
-                const clickCount = ref(0);
-                const clickTimer = ref(null);
-                const clickTimeout = 1000; // 1秒內完成三下點擊
-                
-                const handleTripleClick = () => {
-                    clickCount.value++;
-                    
-                    // 如果是第一次點擊，設置計時器
-                    if (clickCount.value === 1) {
-                        clickTimer.value = setTimeout(() => {
-                            clickCount.value = 0; // 重置計數
-                        }, clickTimeout);
-                    }
-                    
-                    // 如果達到三次點擊
-                    if (clickCount.value === 3) {
-                        clearTimeout(clickTimer.value);
-                        clickCount.value = 0;
-                        
+                // 長按功能 (按壓兩秒)
+                const isLongPressing = ref(false);
+                const longPressTimer = ref(null);
+                const longPressDuration = 2000; // 2秒
+
+                const startLongPress = () => {
+                    isLongPressing.value = true;
+                    longPressTimer.value = setTimeout(() => {
+                        // 如果要啟用隨機按鈕，先檢查是否已有回合被選定（卡片或區域）
+                        const anySelected = rows.value.some(r => r.card || r.box);
+                        if (!showRandomButton.value && anySelected) {
+                            // 嘗試啟用但已有選定，顯示提示並中止
+                            alert('已選定回合，無法啟用隨機選取功能');
+                            isLongPressing.value = false;
+                            longPressTimer.value = null;
+                            return;
+                        }
+
                         // 切換隨機按鈕顯示狀態
                         showRandomButton.value = !showRandomButton.value;
-                        
+
                         // 給用戶反饋
                         if (showRandomButton.value) {
                             alert('隨機選取功能已啟用');
                         } else {
-                            alert('隨機選取功能已關閉');
+                            alert('隨機選取功能已停用');
                         }
+
+                        isLongPressing.value = false;
+                        longPressTimer.value = null;
+                    }, longPressDuration);
+                };
+
+                const endLongPress = () => {
+                    if (longPressTimer.value) {
+                        clearTimeout(longPressTimer.value);
+                        longPressTimer.value = null;
                     }
+                    isLongPressing.value = false;
                 };
 
                 const closeAllModals = () => {
@@ -712,6 +901,10 @@
                         rows.value[currentSelectorIndex.value].card = num.toString();
                         hasManualSelection.value = true; // 標記為手動選擇
                         closeNumberSelector();
+                        // 自動滾動到頁面底部
+                        setTimeout(() => {
+                            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                        }, 100);
                     }
                 };
 
@@ -732,6 +925,10 @@
                         rows.value[currentAreaSelectorIndex.value].box = area.value;
                         hasManualSelection.value = true; // 標記為手動選擇
                         closeAreaSelector();
+                        // 自動滾動到頁面底部
+                        setTimeout(() => {
+                            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                        }, 100);
                     }
                 };
 
@@ -942,8 +1139,26 @@
                     }
                 };
 
+                const subjectIcon = computed(() => {
+                    switch (subject.value) {
+                        case '工作': return 'fas fa-briefcase';
+                        case '感情': return 'fas fa-heart';
+                        case '財運': return 'fas fa-coins';
+                        case '其他': return 'fas fa-star';
+                        default: return 'fas fa-question-circle';
+                    }
+                });
+
                 // Lifecycle hooks
                 onMounted(() => {
+                    // --- 動態頁面掃描 ---
+                    // 系統啟動時，會自動掃描 HTML 中所有 class="page" 的 div
+                    // 並根據它們在檔案中的順序來決定頁面流程。
+                    // 若要新增、刪除或調整頁面順序，直接修改上方的 HTML 即可。
+                    // 只包含 data-visible="true" 的頁面
+                    const pageElements = document.querySelectorAll('.page[data-visible="true"]');
+                    allPages.value = Array.from(pageElements).map(el => el.id);
+
                     updateTime();
                     timeUpdater = setInterval(updateTime, 1000);
                 });
@@ -952,7 +1167,7 @@
                 });
 
                 return {
-                    currentPage, navigateToPage,
+                    currentPage, navigateToPage, goToNextPage, goToPrevPage, rescanPages, setPageVisible,
                     gender, cus_name, subject, questionContent, isSubmitted, submitQuestion, editQuestion,
                     currentTime,
                     rows, getLocationText,
@@ -960,7 +1175,8 @@
                     allRoundsCompleted, hasSelectedBox, hasStartedDrawing,
                     results, formattedResults,
                     base64Output, copyToClipboard, randomSelect, isRandomSelecting, randomSelectCompleted,
-                    showRandomButton, handleTripleClick, hasManualSelection,
+                    showRandomButton, startLongPress, endLongPress, isLongPressing, hasManualSelection,
+                    subjectIcon,
                     // Modals
                     showNumberSelector, showAreaSelector, showDirectionsModal, showCardsModal, showLinksModal, showResultModal,
                     closeAllModals,

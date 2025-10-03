@@ -59,7 +59,8 @@
         <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">歡迎來到抽牌系統</h1>
-            <div class="bg-slate-900/80 text-sm text-cyan-300 font-mono py-2 px-4 rounded-full border border-slate-700 inline-block mb-3 cursor-pointer select-none"
+            <p class="text-sky-300">一個引導您探索內心的工具</p>
+            <div class="bg-slate-900/80 text-sm text-cyan-300 font-mono py-2 px-4 rounded-full border border-slate-700 inline-block cursor-pointer select-none mt-2"
                 @mousedown="startLongPress"
                 @mouseup="endLongPress"
                 @mouseleave="endLongPress"
@@ -69,7 +70,6 @@
                 :class="{ 'bg-cyan-600/80 scale-95 ring-2 ring-cyan-400': isLongPressing }">
                 {{ currentTime }}
             </div>
-            <p class="text-sky-300">一個引導您探索內心的工具</p>
         </div>
 
         <!-- Welcome Page -->
@@ -86,11 +86,10 @@
                 
                 <div class="space-y-6 mb-8">
                     <p class="text-lg text-gray-300 leading-relaxed">
-                        體驗到神秘的占卜
+                        體驗神秘的占卜
                     </p>
                     <p class="text-base text-gray-400">
-                        請用心準備您的問題<br />
-						讓牌卡為您指引方向
+                        請用心準備您的問題<br />讓牌卡為您指引方向
                     </p>
                 </div>
 
@@ -103,7 +102,7 @@
             
             <div class="text-center mt-8">
                 <button @click="goToNextPage()" class="bg-gradient-to-r from-sky-600 to-purple-600 hover:from-sky-700 hover:to-purple-700 text-white font-bold py-4 px-12 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105">
-                    開始占卜之旅 <i class="fas fa-magic ml-2"></i>
+                    開始<i class="fas fa-magic ml-2"></i>
                 </button>
             </div>
         </div>
